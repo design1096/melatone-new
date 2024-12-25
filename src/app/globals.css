@@ -1,21 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* https://pigment.shapefactory.co/?a=55A5D2&b=F6F2EC */
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #7f5a9d;
+  font-family: "Noto Sans JP", serif;
+  font-optical-sizing: auto;
+}
+
+.inputRange {
+  appearance: none;
+  width: 100px;
+  height: 12px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #9878b2 30%, #dddddd 30%);
+  cursor: pointer;
+}
+
+/* ツマミ：Chrome, Safari, Edge用 */
+.inputRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: #7f5a9d;
+  box-shadow: none;
+}
+
+/* ツマミ：Firefox用 */
+.inputRange::-moz-range-thumb {
+  border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: #7f5a9d;
+  box-shadow: none;
 }
