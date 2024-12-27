@@ -26,7 +26,7 @@ export default function Home() {
 
         {/* サイドバーモバイル (スマホ表示) */}
         <div
-          className={`absolute lg:hidden md:w-1/3 sm:w-1/2 xs:w-full z-50 top-0 left-0 h-full bg-white border-r shadow-lg transform transition-transform duration-300 ${
+          className={`absolute lg:hidden md:w-1/3 sm:w-1/2 smx:w-2/3 xs:w-full z-50 top-0 left-0 h-full bg-white border-r shadow-lg transform transition-transform duration-300 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >

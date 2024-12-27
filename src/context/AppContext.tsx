@@ -16,6 +16,8 @@ type AppContextType = {
   setSelectedRoom: React.Dispatch<React.SetStateAction<string | null>>;
   selectedRoomName: string | null;
   setSelectedRoomName: React.Dispatch<React.SetStateAction<string | null>>;
+  isRoomPopupOpen: boolean;
+  setIsRoomPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const defaultContextData = {
@@ -26,6 +28,8 @@ const defaultContextData = {
   setSelectedRoom: () => {},
   selectedRoomName: null,
   setSelectedRoomName: () => {},
+  isRoomPopupOpen: false,
+  setIsRoomPopupOpen: () => {},
 }
 
 const AppContext = createContext<AppContextType>(defaultContextData);
@@ -35,6 +39,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const [userId, setUserId] = useState<string | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedRoomName, setSelectedRoomName] = useState<string | null>(null);
+  const [isRoomPopupOpen, setIsRoomPopupOpen] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -54,7 +59,18 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   return (
-    <AppContext.Provider value={{ user, userId, setUser, selectedRoom, setSelectedRoom, selectedRoomName, setSelectedRoomName }}>
+    <AppContext.Provider 
+      value={{ 
+        user, 
+        userId, 
+        setUser, 
+        selectedRoom, 
+        setSelectedRoom, 
+        selectedRoomName, 
+        setSelectedRoomName,
+        isRoomPopupOpen,
+        setIsRoomPopupOpen,
+      }}>
       {children}
     </AppContext.Provider>
   );

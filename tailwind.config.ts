@@ -29,6 +29,7 @@ const config: Config = {
       },
       screens: {
         xs: '370px', // カスタムブレークポイント
+        smx: '500px',
       },
     },
   },
