@@ -7,6 +7,7 @@ import { FiLogOut } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import { FaFaceSmile } from "react-icons/fa6";
 import AddNewRoomPopup from './AddNewRoomPopup';
+import AddProfilePopup from './AddProfilePopup';
 
 interface SidebarMobileProps {
   toggleSidebar: () => void;
@@ -19,7 +20,7 @@ createdAt: Timestamp;
 }
 
 const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
-  const { user, userId, setSelectedRoom, setSelectedRoomName, isRoomPopupOpen, setIsRoomPopupOpen } = useAppContext();
+  const { user, userId, setSelectedRoom, setSelectedRoomName, isRoomPopupOpen, setIsRoomPopupOpen, isProfilePopupOpen, setIsProfilePopupOpen } = useAppContext();
   const [rooms, setRooms] = useState<Room[]>([]);
   
   // ルーム取得
@@ -96,6 +97,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
       {/* プロフィール登録・編集 */}
       <div 
         className='cursor-pointer border mt-4 rounded-md hover:bg-main-color duration-150'
+        onClick={() => setIsProfilePopupOpen(true)} // ポップアップを表示
       >
         <div className='text-white flex items-center justify-evenly px-4 pt-4 pb-2'>
           <FaFaceSmile 
@@ -104,7 +106,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
             }}
             className='text-4xl mr-2' 
           />
-          <div className='text-xl'>ユーザーさん</div>
+          <div className='text-xl'>{user?.displayName || "ユーザー"}さん</div>
         </div>
         <div className='text-white flex items-center justify-evenly px-4 pb-4'>
           <div className='text-sm'>プロフィール登録・編集</div>
@@ -128,6 +130,12 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
         <AddNewRoomPopup 
           isOpen={isRoomPopupOpen} 
           onClose={() => setIsRoomPopupOpen(false)} 
+        />
+      )}
+      {isProfilePopupOpen && (
+        <AddProfilePopup 
+          isOpen={isProfilePopupOpen} 
+          onClose={() => setIsProfilePopupOpen(false)} 
         />
       )}
     </div>
