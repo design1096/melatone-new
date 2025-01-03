@@ -53,6 +53,10 @@ const AddNewRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         <h2 className="text-lg font-medium text-main-dark-color text-center mb-4">
           新しい部屋を作る
         </h2>
+        {/* 部屋名 */}
+        <label className='block text-sm font-medium text-gray-600 mb-1 ml-1'>
+            部屋名
+        </label>
         <input
           {...register("roomName", {
             required: "部屋名は必須です。",
@@ -62,7 +66,6 @@ const AddNewRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             },
           })}
           type="text"
-          placeholder="部屋名"
           className={`w-full p-2 border rounded mb-4 ${
             errors.roomName ? "border-red-500" : "border-gray-300"
           }`}
@@ -70,6 +73,7 @@ const AddNewRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         {errors.roomName && (
           <p className="text-red-500 text-sm mb-4">{errors.roomName.message}</p>
         )}
+        {/* ボタンエリア */}
         <div className="flex justify-center">
           <button
             type="button"

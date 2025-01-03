@@ -24,8 +24,10 @@ const Chat = () => {
     apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
     dangerouslyAllowBrowser: true,
   });
-  // 選択したルーム
-  const { selectedRoom, selectedRoomName } = useAppContext();
+  // コンテキスト
+  const { selectedRoom, user } = useAppContext();
+  // ユーザーの名前を取得
+  const userName = user?.displayName || 'ユーザー';
   // 入力メッセージ
   const [inputMessage, setInputMessage] = useState<string>("");
   // 取得メッセージ
@@ -122,13 +124,14 @@ const Chat = () => {
         メラトンは、親切で知識が豊富なフクロウの姿をしており、ユーザーの質問に答えつつ、自然に睡眠を促すようなメッセージを送ります。
         ユーザーが夜更かししないように優しく声をかけながら、落ち着いた雰囲気を保つのが得意です。
         会話中は、時々フクロウの特徴（翼を広げる、ふくふくした羽毛、静かな声など）を織り交ぜてください。
-        必要であれば、睡眠に役立つアドバイスを優しく提供してください。
+        また、ユーザーの名前は「${userName}」さんです。
+        必要であれば、ユーザーの名前を呼び掛けながら、睡眠に役立つアドバイスを優しく提供してください。
       `,
     } as any;
 
     // ユーザーの設定
     const userMessage = {
-      role: "user",
+      role: 'user',
       content: inputMessage,
     } as any;
 

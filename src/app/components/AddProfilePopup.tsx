@@ -1,56 +1,85 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAppContext } from '@/context/AppContext';
 import { updateProfile } from "firebase/auth";
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { storage } from '../../../firebase';
 
 type Inputs = {
-    userName: string;
+  userName: string;
+  userPhoto: string;
 };
 
 const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { user, userId } = useAppContext();
+  // 選択された画像ファイルを保持
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<Inputs>();
+
+  // userPhotoの値を監視
+  const userPhoto: string = watch("userPhoto") || "";
 
   // ユーザー情報取得
   useEffect(() => {
     if (isOpen) {
       if (user && user.uid === userId) {
-        setValue("userName", user.displayName || "");
+        setValue("userName", user.displayName || ""); // ユーザー名
+        setValue("userPhoto", user.photoURL || ""); // 画像URL
       }
     }
   }, [isOpen, userId, setValue]);
 
+  // 画像ファイル取込処理
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  // Submit処理
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // スペースを除去
     const trimmedUserName = data.userName.trim();
     if (!trimmedUserName) {
         alert("ユーザー名は空白のみでは登録できません。");
         return;
-      }
+    }
     try {
-        if (user && user.uid === userId) {
+      if (user && user.uid === userId) {
+        // 画像をStorageにアップロード
+        const storageRef = ref(storage, `user_icons/${userId}`);
+        if (selectedFile) {
+          await uploadBytes(storageRef, selectedFile);
+          const downloadURL = await getDownloadURL(storageRef);
           // ユーザーのプロフィール情報を更新
           await updateProfile(user, {
-            displayName: data.userName.trim(), // 更新するユーザー名
+            displayName: data.userName.trim(), // ユーザー名
+            photoURL: downloadURL, // 画像URL
           });
-          alert("ユーザー情報が更新されました。");
-          reset();
-          onClose();
         } else {
-          throw new Error("認証されたユーザーが見つかりません。");
+          // 選択された画像ファイルがない場合
+          await updateProfile(user, {
+            displayName: data.userName.trim(), // ユーザー名
+          });
         }
-      } catch (error) {
-        console.error("ユーザー情報の更新中にエラーが発生しました:", error);
-        alert("ユーザー情報の更新に失敗しました。");
+        alert("ユーザー情報が更新されました。");
+        reset();
+        onClose();
       }
+    } catch (error) {
+      console.error("ユーザー情報の更新中にエラーが発生しました:", error);
+      alert("ユーザー情報の更新に失敗しました。");
+    }
   };
 
   if (!isOpen) return null;
@@ -64,6 +93,20 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         <h2 className="text-lg font-medium text-main-dark-color text-center mb-4">
           プロフィール登録・編集
         </h2>
+        {/* アイコン画像表示 */}
+        {userPhoto && (
+          <div className="mb-4">
+            <img
+              src={userPhoto}
+              alt="アイコン画像"
+              className="w-20 h-20 object-cover rounded-full mx-auto"
+            />
+          </div>
+        )}
+        {/* ユーザー名入力 */}
+        <label className='block text-sm font-medium text-gray-600 mb-1 ml-1'>
+            ユーザー名
+        </label>
         <input
           {...register("userName", {
             required: "ユーザー名は必須です。",
@@ -73,7 +116,6 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             },
           })}
           type="text"
-          placeholder="ユーザー名"
           className={`w-full p-2 border rounded mb-4 ${
             errors.userName ? "border-red-500" : "border-gray-300"
           }`}
@@ -81,6 +123,17 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         {errors.userName && (
           <p className="text-red-500 text-sm mb-4">{errors.userName.message}</p>
         )}
+        {/* アイコン画像取込 */}
+        <label className='block text-sm font-medium text-gray-600 mb-1 ml-1'>
+          アイコン画像
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          className="mb-4 w-full p-2 border rounded"
+          onChange={handleFileChange}
+        />
+        {/* ボタンエリア */}
         <div className="flex justify-center">
           <button
             type="button"

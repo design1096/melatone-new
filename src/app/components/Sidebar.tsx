@@ -86,13 +86,21 @@ const Sidebar = () => {
         className='cursor-pointer border mt-4 rounded-md hover:bg-main-color duration-150'
         onClick={() => setIsProfilePopupOpen(true)} // ポップアップを表示
       >
+        {/* アイコン画像表示 */}
         <div className='text-white flex items-center justify-evenly px-4 pt-4 pb-2'>
-          <FaFaceSmile 
-            style={{
-              flexShrink: 0, // 親のflexboxの影響を防ぐ
-            }}
-            className='text-4xl mr-2' 
-          />
+          {user?.photoURL && 
+            <img
+              src={user.photoURL}
+              alt="アイコン画像"
+              className="w-12 h-12 rounded-full mr-2"
+            /> ||
+            <FaFaceSmile 
+              style={{
+                flexShrink: 0, // 親のflexboxの影響を防ぐ
+              }}
+              className='text-4xl mr-2' 
+            />
+          }
           <div className='text-xl'>{user?.displayName || "ユーザー"}さん</div>
         </div>
         <div className='text-white flex items-center justify-evenly px-4 pb-4'>
