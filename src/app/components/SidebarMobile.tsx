@@ -20,7 +20,7 @@ createdAt: Timestamp;
 }
 
 const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
-  const { user, userId, setSelectedRoom, setSelectedRoomName, isRoomPopupOpen, setIsRoomPopupOpen, isProfilePopupOpen, setIsProfilePopupOpen } = useAppContext();
+  const { user, userId, setSelectedRoom, setSelectedRoomName, isAddRoomPopupOpen, setIsAddRoomPopupOpen, isProfilePopupOpen, setIsProfilePopupOpen } = useAppContext();
   const [rooms, setRooms] = useState<Room[]>([]);
   
   // ルーム取得
@@ -74,7 +74,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
           {/* ルーム追加 */}
           <div 
               className='cursor-pointer flex justify-evenly items-center border mt-4 rounded-md hover:bg-main-color duration-150'
-              onClick={() => setIsRoomPopupOpen(true)} // ポップアップを表示
+              onClick={() => setIsAddRoomPopupOpen(true)} // ポップアップを表示
           >
               <div className='text-white py-4 px-4'>
               <span className='text-2xl pr-4 align-middle'>＋</span>
@@ -82,17 +82,19 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
               </div>
           </div>
           {/* ルーム名表示 */}
-          <ul>
+          <div className='flex-grow overflow-y-auto mt-4 custom-max-height'>
+            <ul>
               {rooms.map((room) => (
-              <li 
+                <li 
                   key={room.id} 
-                  className='cursor-pointer border-b p-4 text-slate-100 hover:bg-main-color duration-150'
+                  className='cursor-pointer border-b p-4 mr-1 text-slate-100 hover:bg-main-color duration-150'
                   onClick={() => selectRoom(room.id, room.name)}
-              >
+                >
                   {room.name}
-              </li>
+                </li>
               ))}
-          </ul>
+            </ul>
+        </div>
       </div>
       {/* プロフィール登録・編集 */}
       <div 
@@ -134,10 +136,10 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
           <span>ログアウト</span>
       </div>
       {/* ポップアップのレンダリング */}
-      {isRoomPopupOpen && (
+      {isAddRoomPopupOpen && (
         <AddNewRoomPopup 
-          isOpen={isRoomPopupOpen} 
-          onClose={() => setIsRoomPopupOpen(false)} 
+          isOpen={isAddRoomPopupOpen} 
+          onClose={() => setIsAddRoomPopupOpen(false)} 
         />
       )}
       {isProfilePopupOpen && (

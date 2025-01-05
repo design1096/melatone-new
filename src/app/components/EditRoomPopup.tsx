@@ -1,6 +1,6 @@
 "use client";
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import React from 'react';
+import { doc, updateDoc } from 'firebase/firestore';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { db } from '../../../firebase';
@@ -10,14 +10,20 @@ type Inputs = {
   roomName: string;
 };
 
-const AddNewRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const { userId, setSelectedRoom, setSelectedRoomName } = useAppContext();
+const EditRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const { selectedRoom, selectedRoomName, setSelectedRoomName } = useAppContext();
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<Inputs>();
+
+  // ルーム情報取得
+  useEffect(() => {
+    setValue("roomName", selectedRoomName || "");
+  }, [setValue]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // スペースを除去
@@ -26,18 +32,17 @@ const AddNewRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
       alert("部屋名は空白のみでは登録できません。");
       return;
     }
-
-    // Firestoreに新規ルーム登録
+    // selectedRoomがnullの場合の処理
+    if (!selectedRoom) {
+      alert("部屋が選択されていません。");
+      return;
+    }
+    // Firestoreのルーム名を更新
     try {
-      const newRoomRef = collection(db, "rooms");
-      const docRef = await addDoc(newRoomRef, {
+      const roomRef = doc(db, "rooms", selectedRoom);
+      await updateDoc(roomRef, {
         name: trimmedRoomName,
-        userId: userId,
-        createdAt: serverTimestamp(),
       });
-      // 登録したルームのIDを取得
-      const newRoomId = docRef.id;
-      setSelectedRoom(newRoomId);
       setSelectedRoomName(trimmedRoomName);
       reset(); // フォームリセット
       onClose(); // ポップアップを閉じる
@@ -55,7 +60,7 @@ const AddNewRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2 className="text-lg font-medium text-main-dark-color text-center mb-4">
-          新しい部屋を作る
+          部屋名を変更する
         </h2>
         {/* 部屋名 */}
         <label className='block text-sm font-medium text-gray-600 mb-1 ml-1'>
@@ -101,6 +106,6 @@ const AddNewRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
     // ReactDOM.createPortalを使用し、ポップアップをdocument.bodyに直接レンダリング
     document.body
   );
-};
+}
 
-export default AddNewRoomPopup;
+export default EditRoomPopup

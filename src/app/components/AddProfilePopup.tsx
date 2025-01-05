@@ -72,9 +72,9 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             displayName: data.userName.trim(), // ユーザー名
           });
         }
-        alert("ユーザー情報が更新されました。");
         reset();
         onClose();
+        alert("ユーザー情報が更新されました。");
       }
     } catch (error) {
       console.error("ユーザー情報の更新中にエラーが発生しました:", error);

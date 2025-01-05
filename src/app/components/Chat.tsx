@@ -43,9 +43,9 @@ const Chat = () => {
   // 音声認識
   const [isRecording, setIsRecording] = useState<boolean>(false);
 
-  // 各Roomにおけるメッセージを取得
   useEffect(() => {
     if (selectedRoom) {
+      // 各Roomにおけるメッセージを取得
       const fetchMessages = async () => {
         const roomDocRef = doc(db, "rooms", selectedRoom);
         const messagesCollectionRef = collection(roomDocRef, "messages");
@@ -62,12 +62,8 @@ const Chat = () => {
         };
       };
       fetchMessages();
-    }
-  }, [selectedRoom]);  
 
-  // StorageからBGMのURLを取得
-  useEffect(() => {
-    if (selectedRoom) {
+      // StorageからBGMのURLを取得
       const fetchAudio = async () => {
         const audioRef = ref(storage, audioFilePath);
         const url = await getDownloadURL(audioRef);

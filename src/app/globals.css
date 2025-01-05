@@ -41,3 +41,21 @@ body {
   background: #7f5a9d;
   box-shadow: none;
 }
+
+@media (max-width: 640px) {
+  .custom-max-height {
+    max-height: calc(100vh - 55vh);
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .custom-max-height {
+    max-height: calc(100vh - 50vh);
+  }
+}
+
+@media (min-width: 1025px) {
+  .custom-max-height {
+    max-height: calc(100vh - 40vh);
+  }
+}
