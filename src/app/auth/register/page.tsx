@@ -1,5 +1,5 @@
 "use client";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import React from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { auth } from '../../../../firebase';
@@ -24,7 +24,15 @@ const Register = () => {
     await createUserWithEmailAndPassword(auth, data.email, data.password)
     .then((userCredential) => {
         const user = userCredential.user;
-        router.push("/auth/login");
+        // メール確認リンクを送信
+        sendEmailVerification(user)
+          .then(() => {
+            alert("確認メールを送信しました。受信ボックスを確認してください。");
+            router.push("/auth/login");
+          })
+          .catch((error) => {
+            alert("確認メールの送信に失敗しました。再度お試しください。");
+          });
       })
     .catch((error) => {
       if(error.code === "auth/email-already-in-use") {

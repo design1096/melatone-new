@@ -23,7 +23,13 @@ const Login = () => {
     // Firebaseでログイン
     await signInWithEmailAndPassword(auth, data.email, data.password)
     .then((userCredential) => {
-        router.push("/");
+        const user = userCredential.user;
+        // メールアドレスが確認済みかどうかをチェック
+        if (user.emailVerified) {
+          router.push("/"); // 確認済みの場合、ホームページへリダイレクト
+        } else {
+          alert("メールアドレスが確認されていません。受信ボックスを確認してください。");
+        }
       })
     .catch((error) => {
       if(error.code === "auth/invalid-credential") {
