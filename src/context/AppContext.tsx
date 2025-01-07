@@ -2,7 +2,7 @@
 import { onAuthStateChanged, User } from "firebase/auth";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { auth } from "../../firebase";
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 type AppProviderProps = {
   children: ReactNode;
@@ -56,14 +56,15 @@ export function AppProvider({ children }: AppProviderProps) {
   const [isEditRoomPopupOpen, setIsEditRoomPopupOpen] = useState<boolean>(false);
   const [isDeleteRoomPopupOpen, setIsDeleteRoomPopupOpen] = useState<boolean>(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (newUser) => {
       setUser(newUser);
       setUserId(newUser ? newUser.uid : null);
 
-      // ユーザ情報が取得できない場合
-      if (!newUser) {
+      // ユーザーが取得できないかつ現在のページが "/auth/register" でない場合
+      if (!newUser && pathname !== "/auth/register") {
         router.push("/auth/login");
       }
     });

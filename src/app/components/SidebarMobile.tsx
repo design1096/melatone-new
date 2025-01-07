@@ -59,6 +59,9 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
   // ログアウト関数
   const handleLogOut = () => {
     auth.signOut();
+    setSelectedRoom(null);
+    setSelectedRoomName(null);
+    window.location.href = "/auth/login"; // リダイレクト
   };
 
   return (

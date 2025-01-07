@@ -60,6 +60,7 @@ const Register = () => {
                   })} 
                   type='text' 
                   className='mt-1 border-2 rounded-md w-full p-2' 
+                  autoComplete='email'
                 />
                 {errors.email && (
                   <span className='text-red-600 text-sm'>{errors.email.message}</span>
@@ -79,6 +80,7 @@ const Register = () => {
                   })} 
                   type='password' 
                   className='mt-1 border-2 rounded-md w-full p-2' 
+                  autoComplete='current-password'
                 />
                 {errors.password && (
                   <span className='text-red-600 text-sm'>{errors.password.message}</span>
