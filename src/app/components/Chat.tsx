@@ -228,13 +228,28 @@ const Chat = () => {
   return (
     <div className='bg-blue-color h-full px-4 pb-5 flex flex-col'>
       <div className='flex-grow overflow-y-auto pr-2 pt-2 mb-4' ref={scrollDiv}>
-        {messages.map((message) => (
+        {messages.map((message, index) => (
           <div key={message.id} className={message.sender === "user" ? "text-right" : "text-left"}>
-            <div className={message.sender === "user" 
-              ? "bg-yellow-color inline-block rounded-lg px-4 py-2 mb-4" 
-              : "bg-main-color inline-block rounded-lg px-4 py-2 mb-4"}
-            >
-              <p className={message.sender === "user" ? "" : "text-white"} style={{ whiteSpace: "pre-wrap" }}>{message.text}</p>
+            <div className={message.sender === "bot" ? "flex justify-center items-center" : ""}>
+              {/* メラトンアイコン表示 */}
+              {message.sender === "bot" && index === messages.findIndex(msg => msg.sender === "bot") && (
+                <div className='mb-4 mr-1'>
+                  <img 
+                    src='/owl-anime.gif'
+                    alt="Bot's response" 
+                    className="fixed-size-img"
+                  />
+                </div>
+              )}
+              {/* 会話表示 */}
+              <div className={message.sender === "user" 
+                ? "bg-yellow-color inline-block rounded-lg px-4 py-2 mb-4" 
+                : "bg-main-color inline-block rounded-lg px-4 py-2 mb-4"}
+              >
+                <p className={message.sender === "user" ? "" : "text-white"} style={{ whiteSpace: "pre-wrap" }}>
+                  {message.text}
+                </p>
+              </div>
             </div>
           </div>
         ))}
