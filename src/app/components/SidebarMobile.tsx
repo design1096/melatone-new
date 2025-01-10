@@ -22,6 +22,8 @@ createdAt: Timestamp;
 const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
   const { user, userId, setSelectedRoom, setSelectedRoomName, isAddRoomPopupOpen, setIsAddRoomPopupOpen, isProfilePopupOpen, setIsProfilePopupOpen } = useAppContext();
   const [rooms, setRooms] = useState<Room[]>([]);
+  // ログアウト中のフラグ
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   
   // ルーム取得
   useEffect(() => {
@@ -57,12 +59,25 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
   };
 
   // ログアウト関数
-  const handleLogOut = () => {
-    auth.signOut();
+  const handleLogOut = async () => {
+    setIsLoggingOut(true); // ログアウト中の状態をセット
     setSelectedRoom(null);
     setSelectedRoomName(null);
-    window.location.href = "/auth/login"; // リダイレクト
+
+    try {
+      await auth.signOut();
+      window.location.href = "/auth/login"; // リダイレクト
+    } catch {
+      alert("ログアウトに失敗しました: ");
+    } finally {
+      setIsLoggingOut(false); // 処理完了後に状態をリセット
+    }
   };
+
+  // ログアウト中は空の状態をレンダリング
+  if (isLoggingOut) {
+    return null;
+  }
 
   return (
     <div className='h-full bg-main-dark-color over-flow-y-auto px-5 flex flex-col'>

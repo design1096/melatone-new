@@ -55,6 +55,8 @@ export function AppProvider({ children }: AppProviderProps) {
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState<boolean>(false);
   const [isEditRoomPopupOpen, setIsEditRoomPopupOpen] = useState<boolean>(false);
   const [isDeleteRoomPopupOpen, setIsDeleteRoomPopupOpen] = useState<boolean>(false);
+  // 認証状態の読み込み状態を管理
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -62,6 +64,7 @@ export function AppProvider({ children }: AppProviderProps) {
     const unsubscribe = onAuthStateChanged(auth, (newUser) => {
       setUser(newUser);
       setUserId(newUser ? newUser.uid : null);
+      setIsAuthLoading(false); // 読み込み完了
 
       // ユーザーが取得できないかつ現在のページが "/auth/register" でない場合
       if (!newUser && pathname !== "/auth/register") {
@@ -73,6 +76,11 @@ export function AppProvider({ children }: AppProviderProps) {
       unsubscribe();
     };
   }, []);
+
+  // 認証状態の読み込み中は空の状態をレンダリング
+  if (isAuthLoading) {
+    return null;
+  }
 
   return (
     <AppContext.Provider 

@@ -84,14 +84,15 @@ const Chat = () => {
 
   // スクロールDiv取得
   useEffect(() => {
-    if (scrollDiv.current) {
+    // メッセージ更新とBGM URL取得が完了している場合
+    if (audioUrl && messages.length > 0 && scrollDiv.current) {
       const element = scrollDiv.current;
       element.scrollTo({
         top: element.scrollHeight,
         behavior: "instant",
       });
     }
-  }, [messages]);
+  }, [audioUrl, messages]);
 
   // メッセージ送信処理
   const sendMessage = async () => {
@@ -258,30 +259,31 @@ const Chat = () => {
         )}
       </div>
       {/* テキスト入力 */}
-      <div className="relative w-full">
-        <input 
-          type="text" 
-          placeholder="メラトンに話しかけてみよう" 
-          className="border-2 rounded w-full pr-20 pl-3 focus:outline-none p-3" 
-          onChange={(e) => setInputMessage(e.target.value)}
-          value={inputMessage}
-        />
-        {/* マイクボタン */}
-        <button
-          className={`absolute inset-y-0 right-14 flex items-center justify-center ${ isRecording ? 'text-red-500' : 'text-main-color'} `}
-          onClick={handleSpeechToText}
-        >
-          <FaMicrophone className="text-2xl" />
-        </button>
-        {/* 送信ボタン */}
-        <button
-          className="absolute inset-y-0 right-3 flex items-center justify-center text-main-color"
-          onClick={() => sendMessage()}
-        >
-          <IoSend className="text-2xl" />
-        </button>
-      </div>
-
+      {selectedRoom && (
+        <div className="relative w-full">
+          <input 
+            type="text" 
+            placeholder="メラトンに話しかけてみよう" 
+            className="border-2 rounded w-full pr-20 pl-3 focus:outline-none p-3" 
+            onChange={(e) => setInputMessage(e.target.value)}
+            value={inputMessage}
+          />
+          {/* マイクボタン */}
+          <button
+            className={`absolute inset-y-0 right-14 flex items-center justify-center ${ isRecording ? 'text-red-500' : 'text-main-color'} `}
+            onClick={handleSpeechToText}
+          >
+            <FaMicrophone className="text-2xl" />
+          </button>
+          {/* 送信ボタン */}
+          <button
+            className="absolute inset-y-0 right-3 flex items-center justify-center text-main-color"
+            onClick={() => sendMessage()}
+          >
+            <IoSend className="text-2xl" />
+          </button>
+        </div>
+      )}
       {/* BGM再生エリア */}
       {audioUrl && (
         <div className='custom-audio mt-4'>
