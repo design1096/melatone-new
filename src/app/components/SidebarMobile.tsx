@@ -8,6 +8,7 @@ import { IoClose } from "react-icons/io5";
 import { FaFaceSmile } from "react-icons/fa6";
 import AddNewRoomPopup from './AddNewRoomPopup';
 import AddProfilePopup from './AddProfilePopup';
+import FirstPopup from './FirstPopup';
 
 interface SidebarMobileProps {
   toggleSidebar: () => void;
@@ -20,7 +21,20 @@ createdAt: Timestamp;
 }
 
 const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
-  const { user, userId, setSelectedRoom, setSelectedRoomName, isAddRoomPopupOpen, setIsAddRoomPopupOpen, isProfilePopupOpen, setIsProfilePopupOpen } = useAppContext();
+  const { 
+    user, 
+    userId, 
+    setSelectedRoom, 
+    setSelectedRoomName, 
+    isAddRoomPopupOpen, 
+    setIsAddRoomPopupOpen, 
+    isProfilePopupOpen, 
+    setIsProfilePopupOpen,
+    isFirstPopupOpen,
+    setIsFirstPopupOpen 
+  } = useAppContext();
+
+  // ルーム情報管理
   const [rooms, setRooms] = useState<Room[]>([]);
   // ログアウト中のフラグ
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -42,6 +56,10 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
             createdAt: doc.data().createdAt,
           }));
           setRooms(newRooms);
+          // ルームが0件の場合にポップアップを表示
+          if (newRooms.length === 0) {
+            setIsFirstPopupOpen(true);
+          }
         });
         return () => {
           unsubscribe();
@@ -164,6 +182,12 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
         <AddProfilePopup 
           isOpen={isProfilePopupOpen} 
           onClose={() => setIsProfilePopupOpen(false)} 
+        />
+      )}
+      {isFirstPopupOpen && (
+        <FirstPopup
+          isOpen={isFirstPopupOpen}
+          onClose={() => setIsFirstPopupOpen(false)}
         />
       )}
     </div>

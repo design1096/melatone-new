@@ -42,7 +42,7 @@ body {
   box-shadow: none;
 }
 
-/* メラトンアイコン表示 */
+/* メラトンアイコン表示（Chat.tsx内） */
 .fixed-size-img {
   width: 90px;
   max-width: 90px;

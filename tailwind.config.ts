@@ -27,9 +27,21 @@ const config: Config = {
       fontFamily: {
         Jua: ['Jua', 'sans-serif'],
       },
+      // カスタムブレークポイント
       screens: {
-        xs: '370px', // カスタムブレークポイント
+        xs: '370px',
         smx: '500px',
+      },
+      // アニメーション
+      animation: {
+        unfoldIn: 'unfoldIn 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards',
+      },
+      keyframes: {
+        unfoldIn: {
+          '0%': { transform: 'scaleY(.005) scaleX(0)' },
+          '50%': { transform: 'scaleY(.005) scaleX(1)' },
+          '100%': { transform: 'scaleY(1) scaleX(1)' },
+        },
       },
     },
   },

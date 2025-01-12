@@ -237,7 +237,6 @@ const Chat = () => {
                 <div className='mb-4 mr-1'>
                   <img 
                     src='/owl-anime.gif'
-                    alt="Bot's response" 
                     className="fixed-size-img"
                   />
                 </div>

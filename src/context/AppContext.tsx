@@ -24,6 +24,8 @@ type AppContextType = {
   setIsEditRoomPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleteRoomPopupOpen: boolean;
   setIsDeleteRoomPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isFirstPopupOpen: boolean;
+  setIsFirstPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const defaultContextData = {
@@ -42,6 +44,8 @@ const defaultContextData = {
   setIsEditRoomPopupOpen: () => {},
   isDeleteRoomPopupOpen: false,
   setIsDeleteRoomPopupOpen: () => {},
+  isFirstPopupOpen: false,
+  setIsFirstPopupOpen: () => {},
 }
 
 const AppContext = createContext<AppContextType>(defaultContextData);
@@ -55,6 +59,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState<boolean>(false);
   const [isEditRoomPopupOpen, setIsEditRoomPopupOpen] = useState<boolean>(false);
   const [isDeleteRoomPopupOpen, setIsDeleteRoomPopupOpen] = useState<boolean>(false);
+  const [isFirstPopupOpen, setIsFirstPopupOpen] = useState<boolean>(false);
   // 認証状態の読み込み状態を管理
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const router = useRouter();
@@ -100,6 +105,8 @@ export function AppProvider({ children }: AppProviderProps) {
         setIsEditRoomPopupOpen,
         isDeleteRoomPopupOpen,
         setIsDeleteRoomPopupOpen,
+        isFirstPopupOpen,
+        setIsFirstPopupOpen,
       }}>
       {children}
     </AppContext.Provider>
