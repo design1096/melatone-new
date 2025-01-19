@@ -70,6 +70,8 @@ const Chat = () => {
         setAudioUrl(url);
       };
       fetchAudio();
+    } else {
+      setAudioUrl("");
     }
   }, [selectedRoom]);
 
