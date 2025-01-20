@@ -9,6 +9,7 @@ import { FaFaceSmile } from "react-icons/fa6";
 import AddNewRoomPopup from './AddNewRoomPopup';
 import AddProfilePopup from './AddProfilePopup';
 import FirstPopup from './FirstPopup';
+import Image from 'next/image';
 
 interface SidebarMobileProps {
   toggleSidebar: () => void;
@@ -67,7 +68,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
       };
       fetchRooms();
     }
-  }, [userId]);
+  }, [setIsFirstPopupOpen, user, userId]);
 
   // ルーム選択処理
   const selectRoom = (roomId: string, roomName: string) => {
@@ -140,10 +141,12 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ toggleSidebar }) =>  {
         {/* アイコン画像表示 */}
         <div className='text-white flex items-center justify-evenly px-4 pt-4 pb-2'>
           {user?.photoURL && 
-            <img
+            <Image
               src={user.photoURL}
               alt="アイコン画像"
               className="w-12 h-12 rounded-full mr-2"
+              width={80}
+              height={80}
             /> ||
             <FaFaceSmile 
               style={{

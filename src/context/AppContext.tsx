@@ -80,7 +80,7 @@ export function AppProvider({ children }: AppProviderProps) {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [pathname, router]);
 
   // 認証状態の読み込み中は空の状態をレンダリング
   if (isAuthLoading) {

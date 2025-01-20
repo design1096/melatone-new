@@ -1,8 +1,8 @@
 "use client";
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
-import React, { useEffect } from 'react';
+import React from 'react'
 import ReactDOM from 'react-dom';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, FieldValues } from 'react-hook-form';
 import { db } from '../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 
@@ -13,7 +13,7 @@ const DeleteRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
     reset,
   } = useForm();
 
-  const onSubmit: SubmitHandler<any> = async () => {
+  const onSubmit: SubmitHandler<FieldValues> = async () => {
     // selectedRoomがnullの場合の処理
     if (!selectedRoom) {
       alert("部屋が選択されていません。");

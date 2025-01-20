@@ -3,7 +3,6 @@ import Sidebar from "./components/Sidebar";
 import SidebarMobile from "./components/SidebarMobile";
 import Chat from "./components/Chat";
 import Chatbar from "./components/Chatbar";
-import { useAppContext } from "@/context/AppContext";
 import { useState } from "react";
 
 export default function Home() {

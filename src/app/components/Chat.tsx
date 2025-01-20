@@ -10,12 +10,18 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { FaCirclePlay, FaCirclePause, FaVolumeOff, FaVolumeHigh } from "react-icons/fa6";
 import { activeColor, inactiveColor, audioFilePath } from './constants';
 import { FaMicrophone } from "react-icons/fa";
+import Image from 'next/image';
 
 type Message = {
   id: string;
   text: string;
   sender: string;
   createdAt: Timestamp;
+};
+
+type OpenAIMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
 };
 
 const Chat = () => {
@@ -115,7 +121,7 @@ const Chat = () => {
     setIsLoading(true);
 
     // メラトンのキャラクター設定
-    const systemMessage = {
+    const systemMessage: OpenAIMessage = {
       role: "system",
       content: `
         あなたは「メラトン」というフクロウをモチーフにしたキャラクターです。
@@ -130,13 +136,13 @@ const Chat = () => {
         「おやすみ、夢の中」という曲名であることと、
         「フリーBGM DOVA-SYNDROME」というサイト（https://dova-s.jp/bgm/play17718.html）で楽曲のダウンロードが出来ることを教えてあげてください。
       `,
-    } as any;
+    };
 
     // ユーザーの設定
-    const userMessage = {
+    const userMessage: OpenAIMessage = {
       role: 'user',
       content: inputMessage,
-    } as any;
+    };
 
     // OpenAIからの返信
     const gpt3Response = await openai.chat.completions.create({
@@ -198,7 +204,7 @@ const Chat = () => {
       return;
     }
 
-    const SpeechRecognition = (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
 
     // 日本語に設定
@@ -210,14 +216,14 @@ const Chat = () => {
     recognition.start();
     setIsRecording(true);
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
       // インプットフィールドに追加
       setInputMessage((prev) => `${prev} ${transcript}`);
       setIsRecording(false);
     };
 
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error('音声認識エラー:', event.error);
       setIsRecording(false);
     };
@@ -237,9 +243,12 @@ const Chat = () => {
               {/* メラトンアイコン表示 */}
               {message.sender === "bot" && index === messages.findIndex(msg => msg.sender === "bot") && (
                 <div className='mb-4 mr-1'>
-                  <img 
+                  <Image 
                     src='/owl-anime.gif'
+                    alt='メラトン'
                     className="fixed-size-img"
+                    width={90}
+                    height={90}
                   />
                 </div>
               )}

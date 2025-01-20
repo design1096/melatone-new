@@ -23,7 +23,7 @@ const EditRoomPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   // ルーム情報取得
   useEffect(() => {
     setValue("roomName", selectedRoomName || "");
-  }, [setValue]);
+  }, [selectedRoomName, setValue]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // スペースを除去

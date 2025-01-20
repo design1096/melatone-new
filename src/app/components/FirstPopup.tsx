@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IoClose } from "react-icons/io5";
+import Image from 'next/image';
 
 const FirstPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   if (!isOpen) return null;
@@ -16,9 +17,12 @@ const FirstPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
             </div>
             {/* メラトンアイコン表示 */}
             <div>
-                <img 
+                <Image 
                     src='/owl-anime.gif'
+                    alt='メラトン'
                     className=""
+                    width={400}
+                    height={400}
                 />
             </div>
             {/* メラトン自己紹介 */}

@@ -30,7 +30,7 @@ const Register = () => {
             alert("確認メールを送信しました。受信ボックスを確認してください。");
             router.push("/auth/login");
           })
-          .catch((error) => {
+          .catch(() => {
             alert("確認メールの送信に失敗しました。再度お試しください。");
           });
       })

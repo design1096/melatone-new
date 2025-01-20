@@ -6,6 +6,7 @@ import { useAppContext } from '@/context/AppContext';
 import { updateProfile } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '../../../firebase';
+import Image from 'next/image';
 
 type Inputs = {
   userName: string;
@@ -36,7 +37,7 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         setValue("userPhoto", user.photoURL || ""); // 画像URL
       }
     }
-  }, [isOpen, userId, setValue]);
+  }, [isOpen, user, userId, setValue]);
 
   // 画像ファイル取込処理
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,10 +97,12 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         {/* アイコン画像表示 */}
         {userPhoto && (
           <div className="mb-4">
-            <img
+            <Image
               src={userPhoto}
               alt="アイコン画像"
-              className="w-20 h-20 object-cover rounded-full mx-auto"
+              className="object-cover rounded-full mx-auto"
+              width={80}
+              height={80}
             />
           </div>
         )}
