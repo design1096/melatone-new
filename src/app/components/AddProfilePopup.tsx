@@ -14,7 +14,7 @@ type Inputs = {
 };
 
 const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const { user, userId } = useAppContext();
+  const { user, userId, profileImageUrl, setProfileImageUrl } = useAppContext();
   // 選択された画像ファイルを保持
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const {
@@ -34,10 +34,10 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
     if (isOpen) {
       if (user && user.uid === userId) {
         setValue("userName", user.displayName || ""); // ユーザー名
-        setValue("userPhoto", user.photoURL || ""); // 画像URL
+        setValue("userPhoto", profileImageUrl || ""); // 画像URL
       }
     }
-  }, [isOpen, user, userId, setValue]);
+  }, [isOpen, user, userId, profileImageUrl, setValue]);
 
   // 画像ファイル取込処理
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,6 +67,7 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             displayName: data.userName.trim(), // ユーザー名
             photoURL: downloadURL, // 画像URL
           });
+          setProfileImageUrl(downloadURL);
         } else {
           // 選択された画像ファイルがない場合
           await updateProfile(user, {
@@ -103,6 +104,7 @@ const AddProfilePopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
               className="object-cover rounded-full mx-auto"
               width={80}
               height={80}
+              unoptimized
             />
           </div>
         )}

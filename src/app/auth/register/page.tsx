@@ -47,11 +47,11 @@ const Register = () => {
     <div className='h-screen flex flex-col items-center justify-center'>
       {/* タイトル */}
       <div className='text-white font-Jua tracking-widest text-4xl'>MELATONE</div>
-      <div className='text-white text-sm mb-12'>眠れない夜のおしゃべり寝落ちアプリ</div>
+      <div className='text-white text-sm md:mb-12 xs:mb-10'>眠れない夜のおしゃべり寝落ちアプリ</div>
         {/* 入力フォーム */}
         <form 
             onSubmit={handleSubmit(onSubmit)} 
-            className='bg-yellow-color rounded-lg shadow-md px-8 py-7 xs:w-80 md:w-96'
+            className='bg-yellow-color rounded-lg shadow-md md:px-8 md:py-7 xs:px-6 xs:py-6 md:w-96 xs:w-80'
         >
             <h1 className='mb-4 text-center text-2xl text-main-dark-color font-medium'>新規登録</h1>
             <div className='mb-4'>

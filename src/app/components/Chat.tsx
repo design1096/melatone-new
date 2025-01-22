@@ -31,7 +31,7 @@ const Chat = () => {
     dangerouslyAllowBrowser: true,
   });
   // コンテキスト
-  const { selectedRoom, user } = useAppContext();
+  const { selectedRoom, user, iconUrl } = useAppContext();
   // ユーザーの名前を取得
   const userName = user?.displayName || 'ユーザー';
   // 入力メッセージ
@@ -243,13 +243,16 @@ const Chat = () => {
               {/* メラトンアイコン表示 */}
               {message.sender === "bot" && index === messages.findIndex(msg => msg.sender === "bot") && (
                 <div className='mb-4 mr-1'>
-                  <Image 
-                    src='/owl-anime.gif'
-                    alt='メラトン'
-                    className="fixed-size-img"
-                    width={90}
-                    height={90}
-                  />
+                  {iconUrl && (
+                    <Image
+                      src={iconUrl}
+                      alt="メラトン"
+                      className="fixed-size-img"
+                      width={90}
+                      height={90}
+                      unoptimized
+                    />
+                  )}
                 </div>
               )}
               {/* 会話表示 */}

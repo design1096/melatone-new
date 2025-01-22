@@ -2,8 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { IoClose } from "react-icons/io5";
 import Image from 'next/image';
+import { useAppContext } from '@/context/AppContext';
 
 const FirstPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  // コンテキスト
+  const { iconUrl } = useAppContext();
+
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
@@ -17,13 +21,16 @@ const FirstPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
             </div>
             {/* メラトンアイコン表示 */}
             <div>
-                <Image 
-                    src='/owl-anime.gif'
-                    alt='メラトン'
-                    className=""
-                    width={400}
-                    height={400}
-                />
+                {iconUrl && (
+                    <Image
+                        src={iconUrl}
+                        alt="メラトン"
+                        className=""
+                        width={400}
+                        height={400}
+                        unoptimized
+                    />
+                )}
             </div>
             {/* メラトン自己紹介 */}
             <div className='text-center text-sm text-main-dark-color leading-6'>

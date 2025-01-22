@@ -11,6 +11,10 @@ body {
   font-family: "Noto Sans JP", serif;
   font-optical-sizing: auto;
 }
+/* スクロールバー非表示（Chrome・Safari）*/
+body::-webkit-scrollbar {
+  display: none;
+}
 
 .inputRange {
   appearance: none;

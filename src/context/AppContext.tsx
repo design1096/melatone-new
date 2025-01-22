@@ -1,8 +1,10 @@
 "use client";
 import { onAuthStateChanged, User } from "firebase/auth";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { auth } from "../../firebase";
+import { auth, storage } from "../../firebase";
 import { usePathname, useRouter } from 'next/navigation';
+import { getDownloadURL, ref } from "firebase/storage";
+import { iconFilePath } from "@/app/components/constants";
 
 type AppProviderProps = {
   children: ReactNode;
@@ -26,6 +28,12 @@ type AppContextType = {
   setIsDeleteRoomPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isFirstPopupOpen: boolean;
   setIsFirstPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  iconUrl: string | null;
+  setIconUrl: React.Dispatch<React.SetStateAction<string | null>>;
+  profileImageUrl: string | null;
+  setProfileImageUrl: React.Dispatch<React.SetStateAction<string | null>>;
+  isLoggingOut: boolean;
+  setIsLoggingOut: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const defaultContextData = {
@@ -46,6 +54,12 @@ const defaultContextData = {
   setIsDeleteRoomPopupOpen: () => {},
   isFirstPopupOpen: false,
   setIsFirstPopupOpen: () => {},
+  iconUrl: null,
+  setIconUrl: () => {},
+  profileImageUrl: null,
+  setProfileImageUrl: () => {},
+  isLoggingOut: false,
+  setIsLoggingOut: () => {},
 }
 
 const AppContext = createContext<AppContextType>(defaultContextData);
@@ -60,6 +74,9 @@ export function AppProvider({ children }: AppProviderProps) {
   const [isEditRoomPopupOpen, setIsEditRoomPopupOpen] = useState<boolean>(false);
   const [isDeleteRoomPopupOpen, setIsDeleteRoomPopupOpen] = useState<boolean>(false);
   const [isFirstPopupOpen, setIsFirstPopupOpen] = useState<boolean>(false);
+  const [iconUrl, setIconUrl] = useState<string | null>(null);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   // 認証状態の読み込み状態を管理
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const router = useRouter();
@@ -76,6 +93,14 @@ export function AppProvider({ children }: AppProviderProps) {
         router.push("/auth/login");
       }
     });
+
+    // StorageからアイコンのURLを取得
+    const fetchIcon = async () => {
+      const iconRef = ref(storage, iconFilePath);
+      const url = await getDownloadURL(iconRef);
+      setIconUrl(url);
+    };
+    fetchIcon();
 
     return () => {
       unsubscribe();
@@ -107,6 +132,12 @@ export function AppProvider({ children }: AppProviderProps) {
         setIsDeleteRoomPopupOpen,
         isFirstPopupOpen,
         setIsFirstPopupOpen,
+        iconUrl,
+        setIconUrl,
+        profileImageUrl,
+        setProfileImageUrl,
+        isLoggingOut,
+        setIsLoggingOut,
       }}>
       {children}
     </AppContext.Provider>

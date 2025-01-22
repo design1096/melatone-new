@@ -2,13 +2,15 @@
 import { collection, onSnapshot, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { FiLogOut } from "react-icons/fi";
-import { auth, db } from '../../../firebase';
+import { db, storage } from '../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 import { FaFaceSmile } from "react-icons/fa6";
 import AddNewRoomPopup from './AddNewRoomPopup';
 import AddProfilePopup from './AddProfilePopup';
 import FirstPopup from './FirstPopup';
 import Image from 'next/image';
+import { getDownloadURL, ref } from 'firebase/storage';
+import useLogout from '@/hooks/useLogout';
 
 type Room = {
   id: string;
@@ -27,17 +29,18 @@ const Sidebar = () => {
     isProfilePopupOpen, 
     setIsProfilePopupOpen,
     isFirstPopupOpen,
-    setIsFirstPopupOpen 
+    setIsFirstPopupOpen,
+    profileImageUrl,
+    setProfileImageUrl,
+    isLoggingOut,
   } = useAppContext();
 
   // ルーム情報管理
   const [rooms, setRooms] = useState<Room[]>([]);
-  // ログアウト中のフラグ
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // ルーム取得
   useEffect(() => {
     if (user) {
+      // ルームの取得
       const fetchRooms = async () => {
         const roomCollectionRef = collection(db, "rooms");
         const q = query(
@@ -62,8 +65,20 @@ const Sidebar = () => {
         };
       };
       fetchRooms();
+
+      // アイコン画像取得
+      const fetchProfileImage = async () => {
+        if (user.photoURL) {
+          const profileImageRef = ref(storage, user.photoURL);
+          const url = await getDownloadURL(profileImageRef);
+          setProfileImageUrl(url);
+        } else {
+          setProfileImageUrl(null);
+        }
+      };
+      fetchProfileImage();
     }
-  }, [setIsFirstPopupOpen, user, userId]);
+  }, [setIsFirstPopupOpen, setProfileImageUrl, user, userId]);
 
   // ルーム選択処理
   const selectRoom = (roomId: string, roomName: string) => {
@@ -72,20 +87,7 @@ const Sidebar = () => {
   };
 
   // ログアウト関数
-  const handleLogOut = async () => {
-    setIsLoggingOut(true); // ログアウト中の状態をセット
-    setSelectedRoom(null);
-    setSelectedRoomName(null);
-
-    try {
-      await auth.signOut();
-      window.location.href = "/auth/login"; // リダイレクト
-    } catch {
-      alert("ログアウトに失敗しました: ");
-    } finally {
-      setIsLoggingOut(false); // 処理完了後に状態をリセット
-    }
-  };
+  const handleLogOut = useLogout();
 
   // ログアウト中は空の状態をレンダリング
   if (isLoggingOut) {
@@ -127,13 +129,14 @@ const Sidebar = () => {
       >
         {/* アイコン画像表示 */}
         <div className='text-white flex items-center justify-evenly px-4 pt-4 pb-2'>
-          {user?.photoURL && 
+          {profileImageUrl && 
             <Image
-              src={user.photoURL}
+              src={profileImageUrl}
               alt="アイコン画像"
               className="w-12 h-12 rounded-full mr-2"
               width={80}
               height={80}
+              unoptimized
             /> ||
             <FaFaceSmile 
               style={{
