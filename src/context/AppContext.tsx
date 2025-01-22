@@ -88,11 +88,19 @@ export function AppProvider({ children }: AppProviderProps) {
       setUserId(newUser ? newUser.uid : null);
       setIsAuthLoading(false); // 読み込み完了
 
-      // ユーザーが取得できないかつ現在のページが "/auth/register" でない場合
-      if (!newUser && pathname !== "/auth/register") {
-        router.push("/auth/login");
+      if (!newUser) {
+        // ログインしていない場合、特定の認証ページ以外はログイン画面にリダイレクト
+        if (pathname !== "/auth/login" && pathname !== "/auth/register") {
+          router.push("/auth/login");
+        }
+      } else {
+        // ログイン済みの場合、認証ページではホーム画面にリダイレクト
+        if (pathname === "/auth/login" || pathname === "/auth/register") {
+          router.push("/");
+        }
       }
-    });
+    }
+  );
 
     // StorageからアイコンのURLを取得
     const fetchIcon = async () => {
